@@ -4,10 +4,16 @@ import (
 	"crud-dasar-go-2/helper"
 	"crud-dasar-go-2/model/web"
 	"net/http"
+
+	"github.com/go-playground/validator"
 )
 
 func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interface{}) {
 	if notFoundError(writer, request, err) {
+		return
+	}
+
+	if validationErrors(writer, request, err) {
 		return
 	}
 
@@ -46,4 +52,24 @@ func internalServerError(writer http.ResponseWriter, request *http.Request, err 
 	}
 
 	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func validationErrors(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
+	exception, ok := err.(validator.ValidationErrors)
+	if ok {
+		writer.Header().Set("Content-Type", "application/json")
+		writer.WriteHeader(http.StatusBadRequest)
+
+		webResponse := web.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "BAD REQUEST",
+			Data:   exception.Error(),
+		}
+
+		helper.WriteToResponseBody(writer, webResponse)
+
+		return true
+	} else {
+		return false
+	}
 }
