@@ -22,7 +22,7 @@ func (k *KamarRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, kamar enti
 
 // FindAll implements repository.KamarRepository.
 func (k *KamarRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.Kamar {
-	SQL := "SELECT nama, tipe, harga_per_malam, deskripsi FROM kamar"
+	SQL := "SELECT id, nama, tipe, harga_per_malam, deskripsi FROM kamar"
 	rows, err := tx.QueryContext(ctx, SQL)
 	helper.PanicIfError(err)
 	defer rows.Close()
@@ -40,7 +40,7 @@ func (k *KamarRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.
 
 // FindById implements repository.KamarRepository.
 func (k *KamarRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, kamarId int) (entity.Kamar, error) {
-	SQL := "SELECT nama, tipe, harga_per_malam, deskripsi FROM kamar WHERE ID = ?"
+	SQL := "SELECT nama, tipe, harga_per_malam, deskripsi FROM kamar WHERE id = ?"
 	rows, err := tx.QueryContext(ctx, SQL, kamarId)
 	helper.PanicIfError(err)
 
