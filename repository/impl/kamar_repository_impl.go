@@ -72,7 +72,6 @@ func (k *KamarRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, kamar entity
 
 // Update implements repository.KamarRepository.
 func (k *KamarRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, kamar entity.Kamar) entity.Kamar {
-	println("kamar repo 1")
 	SQL := "UPDATE kamar SET nama = ? , tipe = ?, harga_per_malam = ?, deskripsi = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, SQL, kamar.Nama, kamar.Tipe, kamar.HargaPerMalam, kamar.Deskripsi, kamar.Id)
 	helper.PanicIfError(err)

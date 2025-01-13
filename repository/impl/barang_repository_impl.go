@@ -30,7 +30,7 @@ func (b *BarangRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity
 	var barangs []entity.Barang
 	for rows.Next() {
 		barang := entity.Barang{}
-		err := rows.Scan(&barang.Id, &barang.Kategori)
+		err := rows.Scan(&barang.Id, &barang.Nama, &barang.Kategori)
 		helper.PanicIfError(err)
 
 		barangs = append(barangs, barang)
@@ -48,7 +48,7 @@ func (b *BarangRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, barangI
 
 	barang := entity.Barang{}
 	if rows.Next() {
-		err := rows.Scan(&barang.Id, &barang.Kategori)
+		err := rows.Scan(&barang.Id, &barang.Nama, &barang.Kategori)
 		helper.PanicIfError(err)
 		return barang, nil
 	} else {
@@ -72,8 +72,8 @@ func (b *BarangRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, barang enti
 
 // Update implements repository.BarangRepository.
 func (b *BarangRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, barang entity.Barang) entity.Barang {
-	SQL := "UPDATE kamar SET nama = ?, kategori = ? WHERE id = ?"
-	_, err := tx.ExecContext(ctx, SQL, barang.Nama, barang.Kategori)
+	SQL := "UPDATE barang SET nama = ?, kategori = ? WHERE id = ?"
+	_, err := tx.ExecContext(ctx, SQL, barang.Nama, barang.Kategori, barang.Id)
 	helper.PanicIfError(err)
 
 	return barang
