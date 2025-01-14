@@ -33,6 +33,7 @@ func (kamarService *KamarServiceImpl) Create(ctx context.Context, request kamar.
 		Tipe:          request.Tipe,
 		HargaPerMalam: request.HargaPerMalam,
 		Deskripsi:     request.Deskripsi,
+		Barang:        request.BarangItems,
 	}
 
 	kamar = kamarService.KamarRepository.Save(ctx, tx, kamar)
@@ -98,6 +99,7 @@ func (kamarService *KamarServiceImpl) Update(ctx context.Context, request kamar.
 	kamar.Tipe = request.Tipe
 	kamar.HargaPerMalam = request.HargaPerMalam
 	kamar.Deskripsi = request.Deskripsi
+	kamar.Barang = request.BarangItems
 
 	kamar = kamarService.KamarRepository.Update(ctx, tx, kamar)
 

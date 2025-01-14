@@ -10,4 +10,9 @@ type Kamar struct {
 	Deskripsi     string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	Barang        []BarangItem
+}
+
+type BarangItem struct {
+	Id int
 }

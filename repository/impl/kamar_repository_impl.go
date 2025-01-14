@@ -67,6 +67,19 @@ func (k *KamarRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, kamar entity
 
 	kamar.Id = int(id)
 
+	if (kamar.Barang) != nil {
+		for _, barang := range kamar.Barang {
+			SQL := "INSERT INTO kamar_barang(id_kamar, id_barang, jumlah_barang) VALUES (?,?,?)"
+			result, err := tx.ExecContext(ctx, SQL, kamar.Id, barang.Id, 99)
+			helper.PanicIfError(err)
+
+			id, err := result.LastInsertId()
+			helper.PanicIfError(err)
+
+			barang.Id = int(id)
+		}
+	}
+
 	return kamar
 }
 
@@ -75,6 +88,19 @@ func (k *KamarRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, kamar enti
 	SQL := "UPDATE kamar SET nama = ? , tipe = ?, harga_per_malam = ?, deskripsi = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, SQL, kamar.Nama, kamar.Tipe, kamar.HargaPerMalam, kamar.Deskripsi, kamar.Id)
 	helper.PanicIfError(err)
+
+	if kamar.Barang != nil {
+		SQL := "DELETE FROM kamar_barang WHERE id_kamar = ?"
+		_, err := tx.ExecContext(ctx, SQL, kamar.Id)
+		helper.PanicIfError(err)
+
+		for _, barang := range kamar.Barang {
+			SQL := "INSERT INTO kamar_barang(id_kamar, id_barang, jumlah_barang) VALUES (?,?,?)"
+			_, err := tx.ExecContext(ctx, SQL, kamar.Id, barang.Id, 99)
+			helper.PanicIfError(err)
+		}
+
+	}
 
 	return kamar
 }
