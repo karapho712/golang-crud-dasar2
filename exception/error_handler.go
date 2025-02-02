@@ -55,15 +55,23 @@ func internalServerError(writer http.ResponseWriter, request *http.Request, err 
 }
 
 func validationErrors(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
-	exception, ok := err.(validator.ValidationErrors)
+	_, ok := err.(validator.ValidationErrors)
 	if ok {
 		writer.Header().Set("Content-Type", "application/json")
 		writer.WriteHeader(http.StatusBadRequest)
 
+		var messages []map[string]interface{}
+		for _, err := range err.(validator.ValidationErrors) {
+			messages = append(messages, map[string]interface{}{
+				"field":   err.Field(),
+				"message": "this field is " + err.Field(),
+			})
+		}
+
 		webResponse := web.WebResponse{
 			Code:   http.StatusBadRequest,
 			Status: "BAD REQUEST",
-			Data:   exception.Error(),
+			Data:   messages,
 		}
 
 		helper.WriteToResponseBody(writer, webResponse)
