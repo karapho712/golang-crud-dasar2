@@ -4,6 +4,7 @@ import (
 	"crud-dasar-go-2/app"
 	controller "crud-dasar-go-2/controller/impl"
 	"crud-dasar-go-2/helper"
+	"crud-dasar-go-2/middleware"
 	repository "crud-dasar-go-2/repository/impl"
 	service "crud-dasar-go-2/service/impl"
 	"net/http"
@@ -27,7 +28,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    "localhost:3000",
-		Handler: router,
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
