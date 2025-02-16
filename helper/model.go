@@ -4,6 +4,7 @@ import (
 	"crud-dasar-go-2/model/entity"
 	barangResponse "crud-dasar-go-2/model/web/barang"
 	kamarResponse "crud-dasar-go-2/model/web/kamar"
+	userResponse "crud-dasar-go-2/model/web/user"
 )
 
 func ToKamarResponse(kamar entity.Kamar) kamarResponse.KamarResponse {
@@ -40,4 +41,12 @@ func ToBarangResponses(barangs []entity.Barang) []barangResponse.BarangResponse 
 	}
 
 	return barangResponses
+}
+
+func ToUserResponse(user entity.User) userResponse.UserResponse {
+	return userResponse.UserResponse{
+		Id:    user.Id,
+		Name:  user.Name,
+		Email: user.Email,
+	}
 }

@@ -7,8 +7,11 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewRouter(kamarController controller.KamarController, barangController controller.BarangController) *httprouter.Router {
+func NewRouter(kamarController controller.KamarController, barangController controller.BarangController, authController controller.AuthController) *httprouter.Router {
 	router := httprouter.New()
+
+	router.POST("/api/auth/login", authController.Login)
+	router.POST("/api/auth/register", authController.Register)
 
 	router.GET("/api/kamars", kamarController.FindAll)
 	router.GET("/api/kamars/:kamarId", kamarController.FindById)
