@@ -3,6 +3,7 @@ package impl
 import (
 	"crud-dasar-go-2/controller"
 	"crud-dasar-go-2/helper"
+	"crud-dasar-go-2/middleware"
 	"crud-dasar-go-2/model/web"
 	"crud-dasar-go-2/model/web/user"
 	"crud-dasar-go-2/service"
@@ -22,9 +23,18 @@ func (authcontroller *AuthControllerImpl) Login(writer http.ResponseWriter, requ
 	helper.ReadFromRequestBody(request, &userLoginRequest)
 
 	authcontroller.UserService.FindByEmailAndPassword(request.Context(), userLoginRequest)
+
+	tokenString, err := middleware.CreateToken(userLoginRequest.Email)
+	if err != nil {
+		helper.PanicIfError(err)
+	}
+
 	webResponse := web.WebResponse{
 		Code:   200,
 		Status: "OK, Authenticate",
+		Data: map[string]interface{}{
+			"token": tokenString,
+		},
 	}
 
 	helper.WriteToResponseBody(writer, webResponse)
